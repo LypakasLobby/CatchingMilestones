@@ -22,33 +22,36 @@ public class AssignCommand {
             dispatcher.register(
                     Commands.literal(a)
                             .then(
-                                    Commands.argument("player", EntityArgument.players())
+                                    Commands.literal("assign")
                                             .then(
-                                                    Commands.argument("type", StringArgumentType.word())
-                                                            .suggests( // creates command suggestions based on what we have in the config
-                                                                    (context, builder) -> ISuggestionProvider.suggest(ConfigGetters.milestoneMap.keySet(), builder)
+                                                    Commands.argument("player", EntityArgument.players())
+                                                            .then(
+                                                                    Commands.argument("type", StringArgumentType.word())
+                                                                            .suggests( // creates command suggestions based on what we have in the config
+                                                                                    (context, builder) -> ISuggestionProvider.suggest(ConfigGetters.milestoneMap.keySet(), builder)
+                                                                            )
+                                                                            .executes(c -> {
+
+                                                                                if (c.getSource().getEntity() instanceof ServerPlayerEntity) {
+
+                                                                                    ServerPlayerEntity player = (ServerPlayerEntity) c.getSource().getEntity();
+                                                                                    if (!PermissionHandler.hasPermission(player, "catchingmilestones.command.admin")) {
+
+                                                                                        player.sendMessage(FancyText.getFormattedText("&cYou don't have permission to use this command!"), player.getUUID());
+                                                                                        return 0;
+
+                                                                                    }
+
+                                                                                }
+
+                                                                                ServerPlayerEntity target = EntityArgument.getPlayer(c, "player");
+                                                                                String type = StringArgumentType.getString(c, "type");
+                                                                                MilestoneHandler.createNewMilestoneForPlayer(target, type);
+                                                                                c.getSource().sendSuccess(FancyText.getFormattedText("&aSuccessfully created a new " + type + " milestone for " + target.getName().getString()), true);
+                                                                                return 1;
+
+                                                                            })
                                                             )
-                                                            .executes(c -> {
-
-                                                                if (c.getSource().getEntity() instanceof ServerPlayerEntity) {
-
-                                                                    ServerPlayerEntity player = (ServerPlayerEntity) c.getSource().getEntity();
-                                                                    if (!PermissionHandler.hasPermission(player, "catchingmilestones.command.admin")) {
-
-                                                                        player.sendMessage(FancyText.getFormattedText("&cYou don't have permission to use this command!"), player.getUUID());
-                                                                        return 0;
-
-                                                                    }
-
-                                                                }
-
-                                                                ServerPlayerEntity target = EntityArgument.getPlayer(c, "player");
-                                                                String type = StringArgumentType.getString(c, "type");
-                                                                MilestoneHandler.createNewMilestoneForPlayer(target, type);
-                                                                c.getSource().sendSuccess(FancyText.getFormattedText("&aSuccessfully created a new " + type + " milestone for " + target.getName().getString()), true);
-                                                                return 1;
-
-                                                            })
                                             )
                             )
             );

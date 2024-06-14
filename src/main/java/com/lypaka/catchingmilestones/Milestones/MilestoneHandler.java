@@ -11,6 +11,7 @@ import java.util.List;
 
 public class MilestoneHandler {
 
+
     public static void createNewMilestoneForPlayer (ServerPlayerEntity player, String type) {
 
         String randomType = type; // if a type is not specified when we call this method then we select one randomly

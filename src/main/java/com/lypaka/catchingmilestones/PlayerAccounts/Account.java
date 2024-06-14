@@ -35,7 +35,10 @@ public class Account {
 
     public void clearMilestone() {
 
-        this.milestone = null;
+        this.milestone.setType("none");
+        this.milestone.setAmount(0);
+        this.milestone.setProgress(0);
+        this.milestone.setCommandReward("");
 
     }
 

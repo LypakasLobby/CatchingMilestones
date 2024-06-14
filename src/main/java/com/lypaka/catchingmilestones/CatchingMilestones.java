@@ -2,6 +2,7 @@ package com.lypaka.catchingmilestones;
 
 import com.lypaka.lypakautils.ConfigurationLoaders.BasicConfigManager;
 import com.lypaka.lypakautils.ConfigurationLoaders.ConfigUtils;
+import com.lypaka.lypakautils.ConfigurationLoaders.PlayerConfigManager;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraftforge.common.MinecraftForge;
@@ -31,6 +32,7 @@ public class CatchingMilestones {
     public static final String MOD_NAME = "CatchingMilestones";
     public static final Logger logger = LogManager.getLogger(MOD_NAME);
     public static BasicConfigManager configManager;
+    public static PlayerConfigManager playerConfigManager;
 
     public CatchingMilestones() throws ObjectMappingException {
 
@@ -39,6 +41,10 @@ public class CatchingMilestones {
         String[] files = new String[]{"catchingmilestones.conf"}; // the config files we want to have
         configManager = new BasicConfigManager(files, dir, CatchingMilestones.class, MOD_NAME, MOD_ID, logger); // the configuration manager
         configManager.init(); // creating the actual configuration manager so we can access our stuff in our configs
+
+        // creating a player-specific account config system to store players' currently active milestone tasks, to persist them across relogs and server restarts
+        playerConfigManager = new PlayerConfigManager("account.conf", "player-accounts", dir, CatchingMilestones.class, MOD_NAME, MOD_ID, logger);
+        playerConfigManager.init();
 
         // Loading the values we created in our config into the mod so things actually work
         ConfigGetters.load();

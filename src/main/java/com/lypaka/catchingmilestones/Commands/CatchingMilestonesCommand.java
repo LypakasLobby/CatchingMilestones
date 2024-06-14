@@ -18,6 +18,7 @@ public class CatchingMilestonesCommand {
     public static void onCommandRegistration (RegisterCommandsEvent event) {
 
         new AssignCommand(event.getDispatcher()); // creates and registers the "/catchingmilestones assign" command (and all the ALIASES ^)
+        new InfoCommand(event.getDispatcher());
         new ReloadCommand(event.getDispatcher()); // creates and registers the "/catchingmilestones reload" command
 
     }
